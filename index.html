@@ -31,10 +31,40 @@
       width: 100%;
     }
     
-    /* Search Bar at Top */
+    /* Route Finder Toggle - Above Search Bar */
+    .panel-toggle {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 16px;
+      z-index: 1000;
+      background: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s;
+    }
+    
+    .panel-toggle:hover {
+      background: #f5f5f5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    
+    .panel-toggle.hidden {
+      display: none;
+    }
+    
+    /* Search Bar - Below Route Finder */
     .search-container {
       position: absolute;
-      top: 16px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
@@ -114,35 +144,6 @@
     
     .suggestion-item:hover {
       background: #f5f5f5;
-    }
-    
-    /* Left Panel Toggle Button */
-    .panel-toggle {
-      position: absolute;
-      left: 16px;
-      top: 80px;
-      z-index: 1000;
-      background: white;
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      transition: all 0.2s;
-    }
-    
-    .panel-toggle:hover {
-      background: #f5f5f5;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-    
-    .panel-toggle.hidden {
-      display: flex;
     }
     
     /* Left Side Panel */
@@ -350,19 +351,9 @@
       color: #4285f4;
     }
     
-    /* Zoom Controls Styling */
+    /* Hide Zoom Controls */
     .leaflet-control-zoom {
-      border: none !important;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15) !important;
-    }
-    
-    .leaflet-control-zoom a {
-      border: none !important;
-      border-bottom: 1px solid #e0e0e0 !important;
-    }
-    
-    .leaflet-control-zoom a:last-child {
-      border-bottom: none !important;
+      display: none !important;
     }
     
     /* Loading Spinner */
@@ -392,12 +383,22 @@
         left: 16px;
         transform: none;
       }
+      
+      .panel-toggle {
+        left: 16px;
+        transform: none;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- Search Bar -->
+<!-- Route Finder Toggle - Above Search Bar -->
+<button class="panel-toggle" id="panelToggle" title="Open Route Finder">
+  🧭
+</button>
+
+<!-- Search Bar - Below Route Finder -->
 <div class="search-container">
   <div class="search-wrapper">
     <input type="text" class="search-input" id="searchInput" placeholder="Search for a place...">
@@ -405,11 +406,6 @@
   </div>
   <div class="search-suggestions" id="searchSuggestions"></div>
 </div>
-
-<!-- Panel Toggle Button -->
-<button class="panel-toggle" id="panelToggle" title="Open Route Finder">
-  🧭
-</button>
 
 <!-- Left Side Panel -->
 <div class="side-panel" id="sidePanel">
@@ -554,7 +550,7 @@ async function getRoute(lat1, lon1, lat2, lon2) {
 // Map Initialization
 // =====================
 const map = L.map('map', {
-  zoomControl: true
+  zoomControl: false
 }).setView([20, 0], 2);
 
 // Standard OpenStreetMap tiles
@@ -597,12 +593,12 @@ const liveLocationBtn = document.getElementById('liveLocationBtn');
 // =====================
 panelToggle.addEventListener('click', () => {
   sidePanel.classList.add('open');
-  panelToggle.style.display = 'none';
+  panelToggle.classList.add('hidden');
 });
 
 closePanel.addEventListener('click', () => {
   sidePanel.classList.remove('open');
-  panelToggle.style.display = 'flex';
+  panelToggle.classList.remove('hidden');
 });
 
 // =====================
